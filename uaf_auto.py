@@ -8,17 +8,21 @@ import time
 import hashlib
 import os
 
-# ----------------- YOUR SETTINGS (ALREADY FILLED FOR YOU) -----------------
+# ----------------- YOUR SETTINGS -----------------
 BASE_URL = "https://lms.uaf.edu.pk"
 LOGIN_URL = urljoin(BASE_URL, "/login/index.php")
 OUTPUT_CSV = "result.csv"
 HASH_FILE = "last_result_hash.txt"
 
-# ---------- YOUR TELEGRAM DETAILS (I PUT THEM HERE FOR YOU) ----------
-TELEGRAM_TOKEN = "8622135249:AAF0wZs1T2rL-PBaB6frwX04ve48xKoK5lU"
-TELEGRAM_CHAT_ID = "8695554062"
+# ---------- TELEGRAM CREDENTIALS (from Environment Variables) ----------
+TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN", "YOUR_TOKEN_HERE")
+TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "YOUR_CHAT_ID_HERE")
 
-# Check every 1 hour (3600 seconds). Change to 60 if you want to test quickly.
+# ---------- YOUR REGISTRATION NUMBER ----------
+# Set this in Render Environment Variables as "REG_NO", or change the default below
+REG_NO = os.environ.get("REG_NO", "2025-ag-11198")  # <-- Change default if needed
+
+# Check every 1 hour (3600 seconds)
 CHECK_INTERVAL = 3600
 
 requests.packages.urllib3.disable_warnings()
@@ -190,8 +194,5 @@ def main_loop(reg_no):
         time.sleep(CHECK_INTERVAL)
 
 if __name__ == "__main__":
-    reg = input("Enter your Registration Number: ").strip()
-    if not reg:
-        print("Please enter a valid number.")
-    else:
-        main_loop(reg)
+    print(f"🚀 Starting UAF Result Monitor for: {REG_NO}")
+    main_loop(REG_NO)
